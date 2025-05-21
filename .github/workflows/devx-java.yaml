@@ -1,0 +1,1260 @@
+name: Test DevX Java
+on:
+    workflow_call:
+        inputs:
+            devx_username:
+                required: true
+                type: string
+            pr_head_sha:
+                required: true
+                type: string
+        secrets:
+            test-repo:
+                required: true
+            auth-token:
+                required: true
+            backend-url:
+                required: true
+            auth-key:
+                required: true
+
+jobs:
+    test-bug-01:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthControllerTest#BUG001 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG001\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-02:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG002 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG002\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-03:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG003 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG003\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+    
+    test-bug-04:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG004 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG004\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+        
+    test-bug-05:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG005 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG005\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-06:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG006 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG006\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-07:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthServiceTest#BUG007 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG007\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-08:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AccountServiceTest#BUG008 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG008\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-09:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AccountServiceTest#BUG009 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG009\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-10:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AccountServiceTest#BUG010 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG010\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-11:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AccountServiceTest#BUG011 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG011\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-12:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransactionServiceTest#BUG012 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG012\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-13:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransactionServiceTest#BUG013 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG013\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-14:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransactionServiceTest#BUG014 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG014\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-15:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransactionServiceTest#BUG015 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG015\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-16:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransactionServiceTest#BUG016 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG016\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-17:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransferServiceTest#BUG017 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG017\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-18:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransferServiceTest#BUG018 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG018\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-19:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransferServiceTest#BUG019 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG019\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-20:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=TransferControllerTest#BUG020 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG020\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
+    test-bug-21:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout PR Code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.pr_head_sha }}
+
+            - name: Checkout tests
+              uses: actions/checkout@v3
+              with:
+                  repository: ${{ secrets.test-repo }}
+                  token: ${{ secrets.auth-token }}
+                  sparse-checkout: java
+                  sparse-checkout-cone-mode: false                  
+                  path: tests
+
+            - name: Setup test files
+              run: |
+                  mkdir -p src/test/java/com/zenvest/devx
+                  mv tests/* src/test/java/com/zenvest/devx
+
+            - name: Setup Java
+              uses: actions/setup-java@v2
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+
+            - name: Setup Maven
+              uses: stCarolas/setup-maven@v5
+              with:
+                  maven-version: '3.9.9'
+
+            - name: Run test on bug 01 and report status
+              shell: bash {0}
+              run: |
+                  set +e #Allow script to continue on error
+                  mvn -Dtest=AuthControllerTest#BUG021 test > /dev/null 2>&1
+                  result=$?
+                  test_status=""
+                  if [ $result -ne 0 ]; then
+                    echo "Test FAILED"
+                    test_status="fail"
+                  else
+                    echo "Test PASSED"
+                    test_status="pass"
+                  fi
+                  echo "Sending status '$test_status' to backend..."
+                  curl -X POST ${{ secrets.backend-url}} \
+                    -H "Content-Type: application/json" \
+                    -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+                    -d "{
+                        \"githubUsername\": \"${{ inputs.devx_username }}\",
+                        \"bugCode\": \"BUG021\",
+                        \"status\": \"$test_status\"
+                    }"
+                  # Exit with the same status as the test
+                  exit ${result}
+
