@@ -111,7 +111,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 02 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -170,7 +170,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 03 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -229,7 +229,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 04 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -288,7 +288,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 05 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -347,7 +347,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 06 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -406,7 +406,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 07 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -465,7 +465,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 08 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -524,7 +524,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 09 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -583,7 +583,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 10 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -642,7 +642,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 11 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -701,7 +701,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 12 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -760,7 +760,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 13 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -819,7 +819,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 14 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -878,7 +878,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 15 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -937,7 +937,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 16 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -996,7 +996,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 17 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -1055,7 +1055,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 18 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -1114,7 +1114,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 19 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -1173,7 +1173,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 20 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
@@ -1232,7 +1232,7 @@ jobs:
               with:
                   maven-version: '3.9.9'
 
-            - name: Run test on bug 01 and report status
+            - name: Run test on bug 21 and report status
               shell: bash {0}
               run: |
                   set +e #Allow script to continue on error
