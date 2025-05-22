@@ -19,7 +19,35 @@ on:
                 required: true
 
 jobs:
+    setup-user:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Warm up backend
+          run: |
+            echo "Warming up backend..."
+            for i in {1..10}; do
+              STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.backend-url }}/health)
+              echo "Attempt $i - Status: $STATUS"
+              if [ "$STATUS" -eq 200 ]; then
+                echo "Backend is up."
+                break
+              fi
+              echo "Backend not ready, waiting 10s..."
+              sleep 10
+            done
+
+        - name: Create user in backend
+          run: |
+            echo "Creating user: ${{ inputs.devx_username }}"
+            curl -X POST ${{ secrets.backend-url }}/create \
+              -H "Content-Type: application/json" \
+              -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
+              -d "{
+                  \"githubUsername\": \"${{ inputs.devx_username }}\"
+              }"
+            
     test-bug-01:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -67,7 +95,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -79,6 +107,7 @@ jobs:
                   exit ${result}
 
     test-bug-02:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -126,7 +155,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -138,6 +167,7 @@ jobs:
                   exit ${result}
 
     test-bug-03:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -185,7 +215,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -197,6 +227,7 @@ jobs:
                   exit ${result}
     
     test-bug-04:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -244,7 +275,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -256,6 +287,7 @@ jobs:
                   exit ${result}
         
     test-bug-05:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -303,7 +335,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -315,6 +347,7 @@ jobs:
                   exit ${result}
 
     test-bug-06:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -362,7 +395,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -374,6 +407,7 @@ jobs:
                   exit ${result}
 
     test-bug-07:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -421,7 +455,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -433,6 +467,7 @@ jobs:
                   exit ${result}
 
     test-bug-08:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -480,7 +515,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -492,6 +527,7 @@ jobs:
                   exit ${result}
 
     test-bug-09:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -539,7 +575,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -551,6 +587,7 @@ jobs:
                   exit ${result}
 
     test-bug-10:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -598,7 +635,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -610,6 +647,7 @@ jobs:
                   exit ${result}
 
     test-bug-11:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -657,7 +695,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -669,6 +707,7 @@ jobs:
                   exit ${result}
 
     test-bug-12:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -716,7 +755,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -728,6 +767,7 @@ jobs:
                   exit ${result}
 
     test-bug-13:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -775,7 +815,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -787,6 +827,7 @@ jobs:
                   exit ${result}
 
     test-bug-14:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -834,7 +875,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -846,6 +887,7 @@ jobs:
                   exit ${result}
 
     test-bug-15:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -893,7 +935,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -905,6 +947,7 @@ jobs:
                   exit ${result}
 
     test-bug-16:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -952,7 +995,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -964,6 +1007,7 @@ jobs:
                   exit ${result}
 
     test-bug-17:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -1011,7 +1055,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -1023,6 +1067,7 @@ jobs:
                   exit ${result}
 
     test-bug-18:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -1070,7 +1115,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -1082,6 +1127,7 @@ jobs:
                   exit ${result}
 
     test-bug-19:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -1129,7 +1175,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -1141,6 +1187,7 @@ jobs:
                   exit ${result}
 
     test-bug-20:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -1188,7 +1235,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
@@ -1200,6 +1247,7 @@ jobs:
                   exit ${result}
 
     test-bug-21:
+        needs: setup-user
         runs-on: ubuntu-latest
         steps:
             - name: Checkout PR Code
@@ -1247,7 +1295,7 @@ jobs:
                     test_status="pass"
                   fi
                   echo "Sending status '$test_status' to backend..."
-                  curl -X POST ${{ secrets.backend-url}} \
+                  curl -X POST ${{ secrets.backend-url}}/update \
                     -H "Content-Type: application/json" \
                     -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
                     -d "{
