@@ -39,7 +39,7 @@ jobs:
         - name: Create user in backend
           run: |
             echo "Creating user: ${{ inputs.devx_username }}"
-            curl -X POST ${{ secrets.backend-url }}/create \
+            curl -X POST ${{ secrets.backend-url }} \
               -H "Content-Type: application/json" \
               -H "X-Webhook-Token: ${{ secrets.auth-key }}" \
               -d "{
